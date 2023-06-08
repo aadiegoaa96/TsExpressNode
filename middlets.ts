@@ -1,96 +1,92 @@
-// [
-
-//     1. will generate route for GET /users.
-//     2. the user data will be transformed so that the response looks like: (use the array function .map to the response)
-//     {
-    
-//     "id": 1,
-//     "prefix":  "",
-//     "firstName": "",
-//     "lastName": "",
-//     "email": "",
-//     "address": " {Street} {Suite} {City} {ZipCode} ",
-//     "geolocation": "(lat, lang) ",
-//     "companyName": ""
-    
-//     }
-//     3. call the api with Axios with async-retry implemented.
-//     4. can only call the APls if the JWT token authorization header has a userld AND a userRole = 'ADMIN' 
-//     Implement this using ExpressJS Middleware
-    
-//     ]
-
-
-
 import express, { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import asyncRetry from 'async-retry';
+import jwt from 'jsonwebtoken';
+import mongoose, { ConnectOptions } from 'mongoose';
 
 const app = express();
-const SECRET_KEY = 'gauss626'; // Reemplaza con tu propia clave secreta
+const port = 3000;
+const SECRET_KEY = 'gauss626';
+const MONGO_URL = 'mongodb://127.0.0.1:27017/mydatabase';
+const COLLECTION_NAME = 'log-collection';
 
-interface User {
-  id: number;
-  prefix: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipCode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
+// Definir el esquema de los logs
+const logSchema = new mongoose.Schema({
+  resourceAccessed: String,
+  userId: String,
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+// Modelo de los logs
+const Log = mongoose.model('Log', logSchema);
+
+// // Middleware para registrar los logs en la colección de MongoDB
+// app.use(async (req: Request, res: Response, next: NextFunction) => {
+//   const { userId } = req.headers;
+//   const logEntry = {
+//     resourceAccessed: req.path,
+//     userId,
+//   };
+
+//   try {
+//     await Log.create(logEntry);
+//   } catch (error) {
+//     console.error('Error al guardar el log en MongoDB:', error);
+//   }
+
+//   next();
+// });
+// Middleware para registrar los logs en la colección de MongoDB
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.headers;
+  const logEntry = {
+    resourceAccessed: req.path,
+    userId: userId || '', // Capturar el valor de userId del encabezado de la solicitud
   };
-  companyName: string;
-}
+
+  try {
+    const log = await Log.create(logEntry);
+    const formattedLog = log.toObject(); // Transformar el objeto a un formato plano
+    console.log('Registro de log guardado:', formattedLog);
+  } catch (error) {
+    console.error('Error al guardar el log en MongoDB:', error);
+  }
+
+  next();
+});
+
+
 
 // Middleware para verificar la autorización del token JWT
 const checkAuthorization = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
+  const { userId, userRole } = req.headers;
 
-  if (!token) {
+  if (!userId || userRole !== 'ADMIN') {
     return res.sendStatus(401); // Unauthorized
   }
 
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY) as { userld: string; userRole: string };
-    const { userld, userRole } = decoded;
-
-    if (userld && userRole === 'ADMIN') {
-      next();
-    } else {
-      res.sendStatus(401); // Unauthorized
-    }
-  } catch (error) {
-    console.error('Error al verificar el token JWT:', error);
-    res.sendStatus(401); // Unauthorized
-  }
+  next();
 };
 
-// Ruta GET /users
-app.get('/users', checkAuthorization, async (req: Request, res: Response) => {
-  try {
-    const response = await asyncRetry(() => axios.get('http://localhost:3000/users/'), {
-      retries: 3, // Número de intentos de reintentos
-      minTimeout: 1000, // Tiempo mínimo entre reintentos en milisegundos
-      factor: 2, // Factor de multiplicación para el tiempo de espera entre reintentos
-    });
+// Transformar los datos del usuario según el formato requerido
+const transformUser = (user: any) => ({
+  userId: user.id,
+  name: user.name,
+  email: user.email,
+  postId: "",
+  title: "",
+  body: ""
+});
 
-    const transformedUsers = response.data.map((user: User) => ({
-      id: user.id,
-      prefix: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      address: `${user.address.street} ${user.address.suite} ${user.address.city} ${user.address.zipCode}`,
-      geolocation: `(${user.address.geo.lat}, ${user.address.geo.lng})`,
-      companyName: '',
-    }));
+// Ruta GET /users
+app.get('/users', async (req: Request, res: Response) => {
+  try {
+    const response = await asyncRetry(() => axios.get('https://jsonplaceholder.typicode.com/users'));
+
+    const transformedUsers = response.data.map(transformUser);
 
     res.json(transformedUsers);
   } catch (error) {
@@ -99,21 +95,71 @@ app.get('/users', checkAuthorization, async (req: Request, res: Response) => {
   }
 });
 
-// Generar y devolver un nuevo token JWT
-app.get('/login', (req: Request, res: Response) => {
-  const user = {
-    userld: 'tu_userld',
-    userRole: 'ADMIN',
-  };
+// Ruta GET /users/:userId/posts
+app.get('/users/:userId/posts', async (req: Request, res: Response) => {
+  const { userId } = req.params;
 
-  const token = jwt.sign(user, SECRET_KEY);
-  res.json({ token });
+  try {
+    const response = await asyncRetry(() => axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`));
+
+    const filteredPosts = response.data.filter((post: any) => post.body.length > 120);
+
+    res.json(filteredPosts);
+  } catch (error) {
+    console.error('Error al llamar a la API:', error);
+    res.sendStatus(500); // Internal Server Error
+  }
 });
 
-// Puerto en el que escucha el servidor
-const port = 3000;
+// Generar el token JWT y mostrarlo en la consola
+const generateJWT = () => {
+  const payload = { userId: 'exampleUserId', userRole: 'ADMIN' };
+  const token = jwt.sign(payload, SECRET_KEY);
+  console.log('JWT generado:', token);
+};
 
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
-});
+// Llamada a la función para generar el token JWT
+generateJWT();
+
+// Conectar a la base de datos de MongoDB
+mongoose.connect(MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+} as ConnectOptions)
+  .then(async () => {
+    // Crear la colección "log-collection" si no existe
+    const collectionExists = await mongoose.connection.db.listCollections({ name: COLLECTION_NAME }).hasNext();
+    if (!collectionExists) {
+      await mongoose.connection.db.createCollection(COLLECTION_NAME, {
+        validator: {
+          $jsonSchema: {
+            bsonType: 'object',
+            required: ['resourceAccessed', 'userId', 'dateCreated'],
+            properties: {
+              resourceAccessed: {
+                bsonType: 'string',
+                description: 'REST path accessed'
+              },
+              userId: {
+                bsonType: 'string',
+                description: 'User ID'
+              },
+              dateCreated: {
+                bsonType: 'date',
+                description: 'Date created'
+              }
+            }
+          }
+        }
+      });
+      console.log(`Colección "${COLLECTION_NAME}" creada exitosamente`);
+    }
+
+    // Configurar la aplicación Express para escuchar en el puerto especificado
+    app.listen(port, () => {
+      console.log(`Servidor escuchando en http://localhost:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error al conectar a MongoDB:', error);
+  });
