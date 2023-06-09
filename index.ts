@@ -1,12 +1,12 @@
-import express from 'express';
+// import express from 'express';
 
-const app = express();
-const port = 3000;
+// const app = express();
+// const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('¡Hola, mundo!');
-});
+// app.get('/', (req, res) => {
+//   res.send('¡Hola, mundo!');
+// });
 
-app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Servidor escuchando en el puerto ${port}`);
+// });

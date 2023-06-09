@@ -23,23 +23,6 @@ const logSchema = new mongoose.Schema({
 // Modelo de los logs
 const Log = mongoose.model('Log', logSchema);
 
-// // Middleware para registrar los logs en la colección de MongoDB
-// app.use(async (req: Request, res: Response, next: NextFunction) => {
-//   const { userId } = req.headers;
-//   const logEntry = {
-//     resourceAccessed: req.path,
-//     userId,
-//   };
-
-//   try {
-//     await Log.create(logEntry);
-//   } catch (error) {
-//     console.error('Error al guardar el log en MongoDB:', error);
-//   }
-
-//   next();
-// });
-// Middleware para registrar los logs en la colección de MongoDB
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.headers;
   const logEntry = {
