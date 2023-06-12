@@ -1,9 +1,9 @@
+import transformUser from '../utils/utils';
+import Handler from '../handler/handler';
 import axios from 'axios';
 import asyncRetry from 'async-retry';
-import { User } from './models';
-import { transformUser } from './utils';
 
-const getUsers = async (): Promise<User[]> => {
+const getUsers = async (): Promise<any[]> => {
   try {
     const response = await asyncRetry(() => axios.get('https://jsonplaceholder.typicode.com/users'));
     const transformedUsers = response.data.map(transformUser);

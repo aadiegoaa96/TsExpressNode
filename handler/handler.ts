@@ -1,28 +1,39 @@
 import { Request, Response } from 'express';
-import { getUsers } from '../controller/controller';
-import jwt from 'jsonwebtoken'; // Importar el módulo jsonwebtoken
+import jwt from 'jsonwebtoken';
+import UserService from '../services/services';
 
 const SECRET_KEY = 'gauss626';
 
-const getUsersHandler = async (req: Request, res: Response) => {
-  try {
-    const transformedUsers = await getUsers();
-    res.json(transformedUsers);
-  } catch (error) {
-    console.error('Error al llamar a la API:', error);
-    res.sendStatus(500); // Internal Server Error
+class Handler {
+  async getUsersHandler(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization?.split(' ')[1]; // Obtener el token del encabezado de autorización
+      if (!token) {
+        return res.status(401).json({ message: 'No se proporcionó un token de autenticación' });
+      }
+
+      jwt.verify(token, SECRET_KEY, async (err, decoded) => {
+        if (err) {
+          return res.status(401).json({ message: 'Token de autenticación inválido' });
+        }
+
+        const transformedUsers = await UserService.getUsers();
+        res.json(transformedUsers);
+      });
+    } catch (error) {
+      console.error('Error al llamar a la API:', error);
+      res.sendStatus(500); // Internal Server Error
+    }
   }
-};
 
-const loginHandler = (req: Request, res: Response) => {
-  // Generar y devolver el token JWT en la respuesta
-  const payload = {
-    username: 'example',
-    role: 'admin'
-  };
+  loginHandler(req: Request, res: Response) {
+    const payload = {
+      username: 'example',
+      role: 'admin'
+    };
+    const token = jwt.sign(payload, SECRET_KEY);
+    res.json({ token });
+  }
+}
 
-  const token = jwt.sign(payload, SECRET_KEY);
-  res.json({ token });
-};
-
-export { getUsersHandler, loginHandler };
+export default new Handler();

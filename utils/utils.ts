@@ -1,4 +1,4 @@
-import { User } from './models';
+import { User } from '../models/models';
 
 const transformUser = (user: any): User => ({
   userId: user.id,
@@ -9,4 +9,4 @@ const transformUser = (user: any): User => ({
   body: '',
 });
 
-export { transformUser };
+export default transformUser;
