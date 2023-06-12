@@ -1,7 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
+import { Handler } from './handler/handler';
 import { routes } from './routes/routes';
 import jwt from 'jsonwebtoken';
+
 const app = express();
 const port = 3000;
 const SECRET_KEY = 'gauss626';

@@ -1,12 +1,11 @@
-import transformUser from '../utils/utils';
-import Handler from '../handler/handler';
-import axios from 'axios';
-import asyncRetry from 'async-retry';
+import { transformUser } from '../utils/utils';
+import { getUsers } from '../services/services';
+import { User } from '../models/models';
 
-const getUsers = async (): Promise<any[]> => {
+const getUsersController = async (): Promise<User[]> => {
   try {
-    const response = await asyncRetry(() => axios.get('https://jsonplaceholder.typicode.com/users'));
-    const transformedUsers = response.data.map(transformUser);
+    const users = await getUsers();
+    const transformedUsers = users.map(transformUser);
     return transformedUsers;
   } catch (error) {
     console.error('Error al llamar a la API:', error);
@@ -14,4 +13,4 @@ const getUsers = async (): Promise<any[]> => {
   }
 };
 
-export { getUsers };
+export { getUsersController };
