@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { Handler } from './handler/handler';
 import { routes } from './routes/routes';
 import jwt from 'jsonwebtoken';
 
@@ -29,18 +28,21 @@ const generateJWT = () => {
 
 generateJWT();
 
-mongoose
-  .connect(MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  } as ConnectOptions)
-  .then(async () => {
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    } as ConnectOptions);
+
     app.listen(port, () => {
       console.log(`Servidor escuchando en http://localhost:${port}`);
     });
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error('Error al conectar a MongoDB:', error);
-  });
+  }
+};
+
+startServer();
 
 export { app };
