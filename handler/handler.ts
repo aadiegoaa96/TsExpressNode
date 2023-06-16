@@ -1,11 +1,19 @@
+// >> handler\handler.ts
+
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { getUsersController } from '../controller/controller';
-import { User } from '../models/models';
+import { UsersController } from '../controller/controller';
+import { User, TransformedUser, TransformedPosts } from '../models/models';
 
 const SECRET_KEY = 'gauss626';
 
 export class Handler {
+  private usersController: UsersController;
+
+  constructor() {
+    this.usersController = new UsersController();
+  }
+
   async getUsersHandler(req: Request, res: Response) {
     try {
       const token = req.headers.authorization?.split(' ')[1];
@@ -18,7 +26,7 @@ export class Handler {
           return res.status(401).json({ message: 'Token de autenticación inválido' });
         }
 
-        const transformedUsers: User[] = await getUsersController();
+        const transformedUsers: TransformedUser[] = await this.usersController.getUsers();
         res.json(transformedUsers);
       });
     } catch (error) {
@@ -30,7 +38,7 @@ export class Handler {
   loginHandler(req: Request, res: Response) {
     const payload = {
       username: 'example',
-      role: 'admin'
+      role: 'admin',
     };
     const token = jwt.sign(payload, SECRET_KEY);
     res.json({ token });
