@@ -1,15 +1,18 @@
 // >> controller\controller.ts
 
 import { usersUtil } from '../utils/utils';
-import { getUsers, getPostsByUserId } from '../services/services';
 import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
+
+import { UserService, PostService } from '../services/services';
+
+// ...
 
 export class UsersController {
   constructor() {}
 
   async getUsers(): Promise<TransformedUser[]> {
     try {
-      const users = await getUsers();
+      const users = await UserService.getUsers();
       const transformedUsers = usersUtil.transformUsers(users);
 
       return transformedUsers;
@@ -21,7 +24,7 @@ export class UsersController {
 
   async getUserPosts(userId: string): Promise<TransformedPosts[]> {
     try {
-      const posts = await getPostsByUserId(userId);
+      const posts = await PostService.getPostsByUserId(userId);
       const transformedPosts = usersUtil.transformUserPosts(posts);
 
       return transformedPosts;
