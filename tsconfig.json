@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-      "target": "ES2017",
-      "module": "commonjs",
-      "outDir": "dist",
-      "strict": true,
-      "esModuleInterop": true
-    },
-    "include": [
-      "index.ts" // Ruta a tus archivos fuente TypeScript
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "app.ts", // Cambiado de "index.ts" a "app.ts"
+    "models/**/*.ts" // Ajusta la ruta a tus archivos fuente TypeScript de los modelos si es necesario
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-  

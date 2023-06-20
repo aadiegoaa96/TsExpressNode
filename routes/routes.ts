@@ -1,8 +1,5 @@
 //routes/routes.ts
 
-// >> routes\routes.ts
-
-//routes/routes.ts
 import express from 'express';
 import { Handler } from '../handler/handler';
 

@@ -1,11 +1,8 @@
-// >> controller\controller.ts
+//  controller\controller.ts
 
 import { usersUtil } from '../utils/utils';
 import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
-
 import { UserService, PostService } from '../services/services';
-
-// ...
 
 export class UsersController {
   constructor() {}

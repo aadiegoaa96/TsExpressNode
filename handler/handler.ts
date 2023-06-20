@@ -1,11 +1,9 @@
 //handler/handler.ts
 
-// >> handler\handler.ts
-
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { UsersController } from '../controller/controller';
-import { User, TransformedUser, TransformedPosts } from '../models/models';
+import { TransformedUser, TransformedPosts } from '../models/models';
 
 const SECRET_KEY = 'gauss626';
 
@@ -43,6 +41,7 @@ export class Handler {
       role: 'admin',
     };
     const token = jwt.sign(payload, SECRET_KEY);
+    console.log(`Token JWT: ${token}`);
     res.json({ token });
   }
 }

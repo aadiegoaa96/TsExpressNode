@@ -1,5 +1,6 @@
-//services/services.ts
-import axios from 'axios';
+// services/services.ts
+
+import axios, { AxiosError } from 'axios';
 import { User, Post } from '../models/models';
 
 export class UserService {
