@@ -5,7 +5,6 @@ import { User, Post, TransformedUser, TransformedPosts } from '../models/models'
 import { UserService, PostService } from '../services/services';
 
 export class UsersController {
-  constructor() {}
 
   async getUsers(): Promise<TransformedUser[]> {
     try {
