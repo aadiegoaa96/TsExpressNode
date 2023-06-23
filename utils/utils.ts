@@ -1,4 +1,6 @@
-//utils/utils.ts
+// utils/utils.ts
+
+
 
 import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
 
@@ -16,13 +18,13 @@ const validPrefixes = [
 ];
 
 export const usersUtil = {
-  transformUsers(users: User[]): TransformedUser[] {
+  async transformUsers(users: User[]): Promise<TransformedUser[]> {
     return users.map((user) => {
-      const nameParts = user.name.split(' '); // Dividir el nombre en partes
-      const firstName = nameParts.slice(validPrefixes.includes(nameParts[0]) ? 1 : 0, -1).join(' '); // Unir los nombres restantes en el primer nombre, excluyendo el apellido
-      const prefix = validPrefixes.includes(nameParts[0]) ? nameParts[0] : ''; // Obtener el prefijo si existe, de lo contrario, dejarlo vacío
-      const lastName = nameParts[nameParts.length - 1] || ''; // Obtener el apellido si existe, de lo contrario, dejarlo vacío
-      const companyName = user.company.name || ''; // Obtener el nombre de la compañía si existe, de lo contrario, dejarlo vacío
+      const nameParts = user.name.split(' ');
+      const firstName = nameParts.slice(validPrefixes.includes(nameParts[0]) ? 1 : 0, -1).join(' ');
+      const prefix = validPrefixes.includes(nameParts[0]) ? nameParts[0] : '';
+      const lastName = nameParts[nameParts.length - 1] || '';
+      const companyName = user.company.name || '';
 
       const transformedUser: TransformedUser = {
         id: user.id,

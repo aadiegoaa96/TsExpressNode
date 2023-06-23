@@ -1,15 +1,12 @@
-//routes/routes.ts
-
-
-// routes/routes.ts
+//routes/routes
 
 import express from 'express';
-import { Handler } from '../handler/handler';
+import { JWT_MID } from '../middleware/middleware';
+import handler from '../handler/handler';
 
 const router = express.Router();
-const handler = new Handler();
 
-router.get('/users', handler.getUsersHandler.bind(handler));
-router.get('/login', handler.loginHandler.bind(handler));
+router.get('/users', JWT_MID, handler.jwtMiddleware);
+router.get('/login', handler.loginHandler);
 
-export { router as routes };
+export default router;

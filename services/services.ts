@@ -1,9 +1,10 @@
 // services/services.ts
 
-import axios, { AxiosError } from 'axios';
+
+import axios from 'axios';
 import { User, Post } from '../models/models';
 
-export class UserService {
+export class TypicodeService {
   static async getUsers(): Promise<User[]> {
     try {
       const response = await axios.get('https://jsonplaceholder.typicode.com/users');
@@ -13,9 +14,7 @@ export class UserService {
       throw error;
     }
   }
-}
 
-export class PostService {
   static async getPostsByUserId(userId: string): Promise<Post[]> {
     try {
       const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
