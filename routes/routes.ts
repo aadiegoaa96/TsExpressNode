@@ -1,4 +1,4 @@
-//routes/routes
+// routes/routes
 
 import express from 'express';
 import { JWT_MID } from '../middleware/middleware';

@@ -12,10 +12,6 @@ export class UsersController {
       const transformedUsers = await usersUtil.transformUsers(users);
       return transformedUsers;
 
-    //   const usersController = new UsersController(); // AQUI ES LOGICA DE HANDLER, NO DEBE IR AQUI, SOLO DEBERIA VALIDAR EN 
-    //   const transformedUsers: TransformedUser[] = await usersController.getUsers();
-    //   res.json(transformedUsers);
-
     } catch (error) {
       console.error('Error calling API:', error);
       throw error;

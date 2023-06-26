@@ -1,8 +1,9 @@
+// handler/handler.ts 
+
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UsersController } from '../controller/controller';
 import { TransformedUser } from '../models/models';
-import { JWT_MID } from '../middleware/middleware';
 
 const SECRET_KEY = 'gauss626';
 
