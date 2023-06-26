@@ -1,40 +1,11 @@
-//middleware/middleware.ts
 // middleware/middleware.ts
 
 import { Request, Response, NextFunction, Express } from 'express';
-import jwt, { VerifyErrors, JwtPayload } from 'jsonwebtoken';
-import { UsersController } from '../controller/controller';
-import { TransformedUser } from '../models/models';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
 
 const SECRET_KEY = 'gauss626';
 
-// export class Middleware {
-//   private usersController: UsersController;
-
-//   constructor() {
-//     this.usersController = new UsersController();
-//   }
-
-//   jwtMiddleware = async (req: Request, res: Response) => {
-//     try {
-//       const transformedUsers: TransformedUser[] = await this.usersController.getUsers();
-//       res.json(transformedUsers);
-//     } catch (error) {
-//       console.error('Error al obtener los usuarios:', error);
-//       res.sendStatus(500);
-//     }
-//   };
-
-//   loginHandler = (req: Request, res: Response) => {
-//     const payload = {
-//       userId: 1234,
-//       userRole: 'ADMIN',
-//     };
-//     const token = jwt.sign(payload, SECRET_KEY);
-//     console.log(`Token JWT: ${token}`);
-//     res.json({ token });
-//   };
-// }
 
 export const JWT_MID = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -55,7 +26,6 @@ export const JWT_MID = async (req: Request, res: Response, next: NextFunction) =
         return res.status(400).json({ message: 'Los campos userId y userRole deben tener el tipo de dato correcto' });
       }
 
-      // Llamar a `next()` para pasar al siguiente middleware o controlador
       next();
 
     } catch (error) {

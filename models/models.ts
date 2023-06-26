@@ -1,4 +1,4 @@
-//models/models.ts
+// models/models.ts
 
 export interface User {
   id: number;
