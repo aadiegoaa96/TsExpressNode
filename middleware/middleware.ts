@@ -8,33 +8,33 @@ import { TransformedUser } from '../models/models';
 
 const SECRET_KEY = 'gauss626';
 
-export class Middleware {
-  private usersController: UsersController;
+// export class Middleware {
+//   private usersController: UsersController;
 
-  constructor() {
-    this.usersController = new UsersController();
-  }
+//   constructor() {
+//     this.usersController = new UsersController();
+//   }
 
-  jwtMiddleware = async (req: Request, res: Response) => {
-    try {
-      const transformedUsers: TransformedUser[] = await this.usersController.getUsers();
-      res.json(transformedUsers);
-    } catch (error) {
-      console.error('Error al obtener los usuarios:', error);
-      res.sendStatus(500);
-    }
-  };
+//   jwtMiddleware = async (req: Request, res: Response) => {
+//     try {
+//       const transformedUsers: TransformedUser[] = await this.usersController.getUsers();
+//       res.json(transformedUsers);
+//     } catch (error) {
+//       console.error('Error al obtener los usuarios:', error);
+//       res.sendStatus(500);
+//     }
+//   };
 
-  loginHandler = (req: Request, res: Response) => {
-    const payload = {
-      userId: 1234,
-      userRole: 'ADMIN',
-    };
-    const token = jwt.sign(payload, SECRET_KEY);
-    console.log(`Token JWT: ${token}`);
-    res.json({ token });
-  };
-}
+//   loginHandler = (req: Request, res: Response) => {
+//     const payload = {
+//       userId: 1234,
+//       userRole: 'ADMIN',
+//     };
+//     const token = jwt.sign(payload, SECRET_KEY);
+//     console.log(`Token JWT: ${token}`);
+//     res.json({ token });
+//   };
+// }
 
 export const JWT_MID = async (req: Request, res: Response, next: NextFunction) => {
   try {

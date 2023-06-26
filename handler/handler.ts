@@ -6,16 +6,6 @@ import { JWT_MID } from '../middleware/middleware';
 
 const SECRET_KEY = 'gauss626';
 
-async function getUsersHandler(): Promise<TransformedUser[]> {
-  try {
-    const usersController = new UsersController();
-    const users = await usersController.getUsers();
-    return users;
-  } catch (error) {
-    throw new Error('Error al obtener los usuarios');
-  }
-}
-
 export class Handler {
   private usersController: UsersController;
 
@@ -23,8 +13,17 @@ export class Handler {
     this.usersController = new UsersController();
   }
 
-  jwtMiddleware = async (req: Request, res: Response) => {
+  usersHandler = async (req: Request, res: Response) => {
     try {
+      const getUsersHandler = async (): Promise<TransformedUser[]> => {
+        try {
+          const users = await this.usersController.getUsers();
+          return users;
+        } catch (error) {
+          throw new Error('Error al obtener los usuarios');
+        }
+      };
+
       const transformedUsers: TransformedUser[] = await getUsersHandler();
       res.json(transformedUsers);
     } catch (error) {
