@@ -1,17 +1,35 @@
-import axios from 'axios';
-import asyncRetry from 'async-retry';
-import { User } from './models';
-import { transformUser } from './utils';
+//  controller\controller.ts
 
-const getUsers = async (): Promise<User[]> => {
-  try {
-    const response = await asyncRetry(() => axios.get('https://jsonplaceholder.typicode.com/users'));
-    const transformedUsers = response.data.map(transformUser);
-    return transformedUsers;
-  } catch (error) {
-    console.error('Error al llamar a la API:', error);
-    throw error;
+
+import { usersUtil } from '../utils/utils';
+import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
+import { TypicodeService } from '../services/services';
+
+export class UsersController {
+  async getUsers(): Promise<TransformedUser[]> {
+    try {
+      const users = await TypicodeService.getUsers();
+      const transformedUsers = await usersUtil.transformUsers(users);
+      return transformedUsers;
+
+    //   const usersController = new UsersController(); // AQUI ES LOGICA DE HANDLER, NO DEBE IR AQUI, SOLO DEBERIA VALIDAR EN 
+    //   const transformedUsers: TransformedUser[] = await usersController.getUsers();
+    //   res.json(transformedUsers);
+
+    } catch (error) {
+      console.error('Error calling API:', error);
+      throw error;
+    }
   }
-};
 
-export { getUsers };
+  async getUserPosts(userId: string): Promise<TransformedPosts[]> {
+    try {
+      const posts = await TypicodeService.getPostsByUserId(userId);
+      const transformedPosts = usersUtil.transformUserPosts(posts);
+      return transformedPosts;
+    } catch (error) {
+      console.error('Error calling API:', error);
+      throw error;
+    }
+  }
+}

@@ -1,8 +1,12 @@
+//routes/routes
+
 import express from 'express';
-import { getUsersHandler, loginHandler } from '../handler/handler';
+import { JWT_MID } from '../middleware/middleware';
+import handler from '../handler/handler';
 
 const router = express.Router();
-router.get('/users', getUsersHandler);
-router.get('/login', loginHandler); // Agregar la ruta de login
 
-export { router as routes };
+router.get('/users', JWT_MID, handler.usersHandler);
+router.get('/login', handler.loginHandler);
+
+export default router;
