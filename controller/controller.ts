@@ -1,8 +1,6 @@
-//  controller\controller.ts
-
-
-import { usersUtil } from '../utils/utils';
-import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
+// controller/controller.ts
+import { usersUtil, postsUtil } from '../utils/utils';
+import { User, NewPost, TransformedUser, transformedNewPost } from '../models/models';
 import { TypicodeService } from '../services/services';
 
 export class UsersController {
@@ -11,17 +9,16 @@ export class UsersController {
       const users = await TypicodeService.getUsers();
       const transformedUsers = await usersUtil.transformUsers(users);
       return transformedUsers;
-
     } catch (error) {
       console.error('Error calling API:', error);
       throw error;
     }
   }
 
-  async getUserPosts(userId: string): Promise<TransformedPosts[]> {
+  async getUserPosts(userId: string): Promise<transformedNewPost[]> {
     try {
       const posts = await TypicodeService.getPostsByUserId(userId);
-      const transformedPosts = usersUtil.transformUserPosts(posts);
+      const transformedPosts = postsUtil.transformUserPosts(posts);
       return transformedPosts;
     } catch (error) {
       console.error('Error calling API:', error);
