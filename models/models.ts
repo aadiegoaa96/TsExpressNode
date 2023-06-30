@@ -24,13 +24,9 @@ export interface User {
   };
 }
 
-
-export interface NewPost {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  postId: string;
+export interface Post {
+  postId: number;
+  userId: number;
   title: string;
   body: string;
 }
@@ -45,20 +41,10 @@ export interface TransformedUser {
   geolocation: string;
   companyName: string;
 }
-export interface transformedNewPost {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  postId: string;
-  title: string;
-  body: string;
-}
-export interface TransformedPost {
-  userId: string;
-  name: string;
-  email: string;
-  postId: string;
+
+export interface TransformedPosts {
+  postId: number;
+  userId: number;
   title: string;
   body: string;
 }

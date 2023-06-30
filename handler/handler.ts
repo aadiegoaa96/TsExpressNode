@@ -1,8 +1,9 @@
-// handler/handler.ts
+// handler/handler.ts 
+
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UsersController } from '../controller/controller';
-import { TransformedUser, transformedNewPost } from '../models/models';
+import { TransformedUser } from '../models/models';
 
 const SECRET_KEY = 'gauss626';
 
@@ -40,18 +41,6 @@ export class Handler {
     const token = jwt.sign(payload, SECRET_KEY);
     console.log(`Token JWT: ${token}`);
     res.json({ token });
-  };
-
-  postHandler = async (req: Request, res: Response) => {
-    const userId: string = req.params.userId;
-
-    try {
-      const userPosts = await this.usersController.getUserPosts(userId);
-      res.json(userPosts);
-    } catch (error) {
-      console.error('Error al obtener los posts del usuario:', error);
-      res.sendStatus(500);
-    }
   };
 }
 

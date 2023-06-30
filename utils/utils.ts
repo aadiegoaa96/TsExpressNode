@@ -1,5 +1,8 @@
 // utils/utils.ts
-import { User, NewPost, TransformedUser, transformedNewPost } from '../models/models';
+
+
+
+import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
 
 const validPrefixes = [
   'Mr.',
@@ -11,11 +14,11 @@ const validPrefixes = [
   'Lic.',
   'Rev.',
   'Fr.',
-  'Bro',
+  'Bro'
 ];
 
 export const usersUtil = {
-  transformUsers(users: User[]): TransformedUser[] {
+  async transformUsers(users: User[]): Promise<TransformedUser[]> {
     return users.map((user) => {
       const nameParts = user.name.split(' ');
       const firstName = nameParts.slice(validPrefixes.includes(nameParts[0]) ? 1 : 0, -1).join(' ');
@@ -31,26 +34,21 @@ export const usersUtil = {
         email: user.email,
         address: `${user.address.street} ${user.address.suite} ${user.address.city} ${user.address.zipcode}`,
         geolocation: `(${user.address.geo.lat}, ${user.address.geo.lng})`,
-        companyName,
+        companyName
       };
 
       return transformedUser;
     });
   },
-};
 
-export const postsUtil = {
-  transformUserPosts(posts: NewPost[]): transformedNewPost[] {
+  transformUserPosts(posts: Post[]): TransformedPosts[] {
     return posts.map((post) => {
       return {
         postId: post.postId,
         userId: post.userId,
-        firstName: post.firstName,
-        lastName: post.lastName,
-        email: post.email,
         title: post.title,
-        body: post.body,
+        body: post.body
       };
     });
-  },
+  }
 };

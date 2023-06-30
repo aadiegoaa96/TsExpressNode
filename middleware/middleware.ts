@@ -1,8 +1,11 @@
 // middleware/middleware.ts
-import { Request, Response, NextFunction } from 'express';
+
+import { Request, Response, NextFunction, Express } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+
 const SECRET_KEY = 'gauss626';
+
 
 export const JWT_MID = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,12 +23,11 @@ export const JWT_MID = async (req: Request, res: Response, next: NextFunction) =
       }
 
       if (typeof decodedToken.userId !== 'number' || typeof decodedToken.userRole !== 'string') {
-        return res
-          .status(400)
-          .json({ message: 'Los campos userId y userRole deben tener el tipo de dato correcto' });
+        return res.status(400).json({ message: 'Los campos userId y userRole deben tener el tipo de dato correcto' });
       }
 
       next();
+
     } catch (error) {
       console.error('Error al verificar el token:', error);
       res.sendStatus(500);

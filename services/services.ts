@@ -1,6 +1,7 @@
 // services/services.ts
+
 import axios from 'axios';
-import { User, NewPost } from '../models/models';
+import { User, Post } from '../models/models';
 import retry from 'async-retry';
 
 export class TypicodeService {
@@ -17,7 +18,7 @@ export class TypicodeService {
     }
   }
 
-  static async getPostsByUserId(userId: string): Promise<NewPost[]> {
+  static async getPostsByUserId(userId: string): Promise<Post[]> {
     try {
       const response = await retry(async () => {
         const result = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
