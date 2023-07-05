@@ -1,5 +1,4 @@
-//  controller\controller.ts
-
+//  controller/controller.ts
 
 import { usersUtil } from '../utils/utils';
 import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
@@ -18,14 +17,4 @@ export class UsersController {
     }
   }
 
-  async getUserPosts(userId: string): Promise<TransformedPosts[]> {
-    try {
-      const posts = await TypicodeService.getPostsByUserId(userId);
-      const transformedPosts = usersUtil.transformUserPosts(posts);
-      return transformedPosts;
-    } catch (error) {
-      console.error('Error calling API:', error);
-      throw error;
-    }
-  }
 }

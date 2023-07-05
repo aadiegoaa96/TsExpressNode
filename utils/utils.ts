@@ -1,7 +1,5 @@
 // utils/utils.ts
 
-
-
 import { User, Post, TransformedUser, TransformedPosts } from '../models/models';
 
 const validPrefixes = [
@@ -21,7 +19,8 @@ export const usersUtil = {
   async transformUsers(users: User[]): Promise<TransformedUser[]> {
     return users.map((user) => {
       const nameParts = user.name.split(' ');
-      const firstName = nameParts.slice(validPrefixes.includes(nameParts[0]) ? 1 : 0, -1).join(' ');
+      const firstNameIndex = validPrefixes.includes(nameParts[0]) ? 1 : 0;
+      const firstName = nameParts.slice(firstNameIndex, -1).join(' ');
       const prefix = validPrefixes.includes(nameParts[0]) ? nameParts[0] : '';
       const lastName = nameParts[nameParts.length - 1] || '';
       const companyName = user.company.name || '';
@@ -40,15 +39,19 @@ export const usersUtil = {
       return transformedUser;
     });
   },
+};
 
-  transformUserPosts(posts: Post[]): TransformedPosts[] {
-    return posts.map((post) => {
-      return {
-        postId: post.postId,
-        userId: post.userId,
-        title: post.title,
-        body: post.body
-      };
-    });
-  }
+export const postUtil = {
+  async transformPost(userId: string, post: any, user: any): Promise<any> {
+    const transformedPost: any = {
+      userId: userId,
+      name: `${user.firstName} ${user.lastName}`, // Corregido
+      email: user.email,
+      postId: post.id,
+      title: post.title,
+      body: post.body
+    };
+
+    return transformedPost;
+  },
 };

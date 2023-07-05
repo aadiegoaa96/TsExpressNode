@@ -3,9 +3,7 @@
 import { Request, Response, NextFunction, Express } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-
 const SECRET_KEY = 'gauss626';
-
 
 export const JWT_MID = async (req: Request, res: Response, next: NextFunction) => {
   try {

@@ -1,4 +1,4 @@
-// models/models.ts
+// models/models.ts 
 
 export interface User {
   id: number;
@@ -24,9 +24,13 @@ export interface User {
   };
 }
 
-export interface Post {
+export interface NewPost {
+  userId: string;
+  id: number;
+  firstName?: string;
+  lastName?: string;
+  email: string;
   postId: number;
-  userId: number;
   title: string;
   body: string;
 }
@@ -43,6 +47,13 @@ export interface TransformedUser {
 }
 
 export interface TransformedPosts {
+  postId: number;
+  userId: number;
+  title: string;
+  body: string;
+}
+
+export interface Post {
   postId: number;
   userId: number;
   title: string;
